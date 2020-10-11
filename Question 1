@@ -1,0 +1,32 @@
+import csv
+
+with open("aqi_data_civic.csv") as file:
+    reader = csv.reader(file)
+    next(reader)
+    raw_data = [row for row in reader]
+
+data = []
+for row in raw_data:
+    new_row = [row[2][6:10], row[2][3:5], row[2][0:2], row[17], row[14]]
+    data.append(new_row)
+    
+data.sort()
+
+year = int(data[0][0])
+day = int(data[0][2])
+
+count = 0
+for row in data: 
+    if row[4] == '':
+        pass
+    elif int(row[4]) >= 100: 
+        if int(row[0]) == year:
+            if int(row[2]) != day:
+                count += 1
+                day = int(row[2])
+                
+        else:
+            print("In " + str(year) + " there were " + str(count) + " days with PM2.5 above 100")
+            count = 0 
+            year +=1 
+
