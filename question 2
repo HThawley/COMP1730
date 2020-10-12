@@ -82,13 +82,21 @@ for year in yearly_count:
     monthly_count.append(x)
 
 print(monthly_count)
-
+k=0
 i = 0
-while i < 12:
+for month in months:
     for x in monthly_count:
-        if i in x:
-            print(months[i] + " was the worst or equal worst month for AQI PM2.5 in " +str(int(data[0][0]) + i))
-        else: 
-            pass
+        if months.index(month) in x: 
+            if len(x) == 1:
+                print(month + " was the worst or equal worst month for AQI PM2.5 in 1 year: " + str(int(data[0][0]) + k))
+            elif len(x) > 1:
+                printable = ""
+                n = 0 
+                while n<len(x):
+                    printable += str(int(data[0][0]) + x[n]) + ', '
+                    n+=1
+                print(month + " was the worst or equal worst month for AQI PM2.5 in " + str(len(x)) + " years: " + printable)
+        k+=1
     i+=1
+    k=0      
              
