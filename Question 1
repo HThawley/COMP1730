@@ -7,26 +7,42 @@ with open("aqi_data_civic.csv") as file:
 
 data = []
 for row in raw_data:
-    new_row = [row[2][6:10], row[2][3:5], row[2][0:2], row[17], row[14]]
+    if row[17][1] == ':':
+        time = row[17][0]
+    else: 
+        time = row[17][:2]
+    if row[14] == '':
+        row[14] = 0 
+    new_row = [int(row[2][6:10]), int(row[2][3:5]), int(row[2][0:2]), int(time), int(row[14])]
     data.append(new_row)
     
 data.sort()
 
-year = int(data[0][0])
-day = int(data[0][2])
-
+year = data[0][0]
+month = 0
+day = 0
 count = 0
+
 for row in data: 
-    if row[4] == '':
+    if row[4] <100:
         pass
-    elif int(row[4]) >= 100: 
-        if int(row[0]) == year:
-            if int(row[2]) != day:
-                count += 1
-                day = int(row[2])
-                
+    else:
+        if row[0] == year:
+            if row[1] == month:
+                if row[2] == day:
+                    pass
+                else:
+                    count += 1
+                    day = row[2]
+                    month = row[1]
+            else:
+                count +=1 
+                day = row[2]
+                month = row[1]
         else:
             print("In " + str(year) + " there were " + str(count) + " days with PM2.5 above 100")
             count = 0 
-            year +=1 
-
+            year += 1 
+            month = 0
+            day=0
+print("In " + str(year) + " there were " + str(count) + " days with AQI PM2.5 above 100")         
