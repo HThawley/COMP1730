@@ -7,32 +7,38 @@ with open("aqi_data_civic.csv") as file:
 
 data = []
 for row in raw_data:
-    new_row = [row[2][6:10], row[2][3:5], row[2][0:2], row[17], row[14]]
+    if row[17][1] == ':':
+        time = row[17][0]
+    else: 
+        time = row[17][:2]
+    if row[14] == '':
+        row[14] = 0 
+    new_row = [int(row[2][6:10]), int(row[2][3:5]), int(row[2][0:2]), int(time), int(row[14])]
     data.append(new_row)
     
 data.sort()
 
-year = int(data[0][0])
+year = data[0][0]
 month = 0
 day = 0
 count = 0
 
 for row in data: 
-    if row[4] == '' or int(row[4]) <100:
+    if row[4] <100:
         pass
     else:
-        if int(row[0]) == year:
-            if int(row[1]) == month:
-                if int(row[2]) == day:
+        if row[0] == year:
+            if row[1] == month:
+                if row[2] == day:
                     pass
                 else:
                     count += 1
-                    day = int(row[2])
-                    month = int(row[1])
+                    day = row[2]
+                    month = row[1]
             else:
                 count +=1 
-                day = int(row[2])
-                month = int(row[1])
+                day = row[2]
+                month = row[1]
         else:
             print("In " + str(year) + " there were " + str(count) + " days with PM2.5 above 100")
             count = 0 
@@ -44,29 +50,27 @@ print("In " + str(year) + " there were " + str(count) + " days with AQI PM2.5 ab
 months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'December', ]
 
 yearly_count=  []
-first_year = int(data[0][0])
+first_year = data[0][0]
 
-while first_year <= int(data[-1][0]):
+while first_year <= data[-1][0]:
     yearly_count.append([0,0,0,0,0,0,0,0,0,0,0,0])
     first_year +=1
 
 for row in data: 
-    if row[4] == '' or int(row[4]) < 33:
+    if row[4] < 33:
         pass
     else: 
-        index_0 = int(row[0]) - int(data[0][0])
-        index_1 = int(row[1]) - 1 
-        if int(row[2]) == day:
-            if int(row[1]) != month:
-                month = int(row[1])
-                day = int(row[2])
+        index_0 = row[0] - data[0][0]
+        index_1 = row[1] - 1 
+        if row[2] == day:
+            if row[1] != month:
+                month = row[1]
+                day = row[2]
                 yearly_count[index_0][index_1] += 1
         else: 
-            day = int(row[2])
-            month = int(row[1])
+            day = row[2]
+            month = row[1]
             yearly_count[index_0][index_1] += 1
-
-print(yearly_count)
  
 k=0
 for year in yearly_count: 
@@ -76,8 +80,6 @@ for year in yearly_count:
     yearly_count[k] = x    
     k+=1
 
-print(yearly_count)
-
 final_countdown = {}
 k=0
 for month in months: 
@@ -85,9 +87,7 @@ for month in months:
     for year in yearly_count:
         for mon in year: 
             if mon == months.index(month):
-                final_countdown[month].append(+int(data[0][0]))
-
-print(final_countdown)
+                final_countdown[month].append(data[0][0])
 
 for month in months:
     x = final_countdown.get(month)
