@@ -47,8 +47,9 @@ for row in data:
             day=0
 print("In " + str(year) + " there were " + str(count) + " days with AQI PM2.5 above 100")             
 
-months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'December', ]
+print( )
 
+months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'December', ]
 yearly_count=  []
 first_year = data[0][0]
 
@@ -80,6 +81,7 @@ for year in yearly_count:
     yearly_count[k] = x    
     k+=1
 
+
 final_countdown = {}
 
 for month in months: 
@@ -93,3 +95,14 @@ for month in months:
     x = final_countdown.get(month)
     if x != []: 
         print(month + " was the worst or equal worst month in " + str(len(x)) + " year(s): "+ str(x)[1:-1])
+print( )
+i = 0 
+for year in yearly_count: 
+    if len(year) == 0: 
+        print("No AQI PM2.5 data was taken in " + str(data[0][0] + i))
+    elif len(year) > 1: 
+        statement = ''
+        for x in year: 
+            statement = statement + months[x] + ", "
+        print("In " + str(data[0][0] + i) + " the months: " + str(statement) + " were the equal worst")
+    i+=1
