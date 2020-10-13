@@ -1,3 +1,24 @@
+def import_and_sort(path_to_file):
+    import csv
+    with open(path_to_file) as file:
+        reader = csv.reader(file)
+        next(reader)
+        raw_data = [row for row in reader]
+
+    data = []
+
+    for row in raw_data:
+        if row[17][1] == ':':
+            time = row[17][0]
+        else: 
+            time = row[17][:2]
+        if row[14] == '':
+            row[14] = 0 
+        new_row = [int(row[2][6:10]), int(row[2][3:5]), int(row[2][0:2]), int(time), int(row[14])]
+        data.append(new_row)
+    data.sort() 
+    return data
+
 def question_1(data):
     
     year = data[0][0]
@@ -92,25 +113,7 @@ def question_2(data):
         i+=1
         
 def analyse(path_to_file):
-    import csv
-    with open(path_to_file) as file:
-        reader = csv.reader(file)
-        next(reader)
-        raw_data = [row for row in reader]
-
-    data = []
-
-    for row in raw_data:
-        if row[17][1] == ':':
-            time = row[17][0]
-        else: 
-            time = row[17][:2]
-        if row[14] == '':
-            row[14] = 0 
-        new_row = [int(row[2][6:10]), int(row[2][3:5]), int(row[2][0:2]), int(time), int(row[14])]
-        data.append(new_row)
-    data.sort()  
-
+    data = import_and_sort(path_to_file)
     question_1(data)
     question_2(data)
     
