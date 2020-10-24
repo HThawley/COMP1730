@@ -2,9 +2,7 @@
 Template for the COMP1730/6730 project assignment, S2 2020.
 The assignment specification is available on the course web site:
 https://cs.anu.edu.au/courses/comp1730/assessment/project/
-
 The assignment is due 25/10/2020 at 11.55 pm, Canberra time.
-
 Collaborators: u6942852, u6942813, u6941278
 """
 
@@ -38,7 +36,6 @@ def import_and_sort(path_to_file):
         
     Input:
     Takes one string as an argument, containing the location of a csv data file
-
     Output:
     Returns a list with each element being a list of integers in the format: "year, month, day, hour, AQI_PM2.5" 
     with rows in chronological order 
@@ -124,6 +121,7 @@ def question_2(data):
     For each month which was the worst for any year, prints the years and the number of years for which it was the worst
     If a month had two or more equally bad months, prints a statement clarifying this 
     """
+    
     the_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August','September', 'October', 'November', 'December']
     years = [] 
     i = 0
@@ -226,23 +224,22 @@ def question_3(data):
                 elif prev_time_window[i][3] - prev_time_window[i+1][3] != 1: #If the day has not changed, adds an entry with an approximated reading 
                     prev_time_window.insert(i+1, [prev_time_window[i+1][0],prev_time_window[i+1][1],prev_time_window[i+1][2],prev_time_window[i+1][3]+1, (prev_time_window[i][4]+prev_time_window[i+1][4])//2])
             
-
         # Estimates minimum actual reading by finding a maximum value for the average of the prior 23 hours of readings. A minimum actual reading raises the maximum 23-hour average by the smallest amount to reach the measured 24-hour average 
         # The maximum average for the prior 23 hours is calculated by assuming the oldest actual reading is 0
         # Therefore "23-hour-avg" = 24*("24-hour-avg"/23) And the "newest 24-hour-avg" = ("minimum actual reading" + 23*"23-hour-average")/24
         # Rearranged: 
-        estimated_min = 24*prev_time_window[0][4] - 23*prev_time_window[1][4]
+        estimated_min = 24*prev_time_window[0][4] - 24*prev_time_window[1][4]
     
         #Estimates maximum actual reading by finding a minimum value for the average of the prior 23 hours of readings. A maximum actual reading raises the minimum 23-hour average by the smallest amount to reach the measured 24-hour average
         #The minimum average for the prior 23 hours is caluclated by finding the minimum actual measurement of each reading in the 23-hour average via the method used above for esitmating the minimum 
         min_prev_23hour_avg = 0 
-        i = 24 
+        i = 23
         while i > 0 :
-            min_prev_23hour_avg += (24*prev_time_window[i][4]-23*prev_time_window[i+1][4])//24
+            min_prev_23hour_avg += 24*prev_time_window[i][4] - 24*prev_time_window[i+1][4]
             i -= 1
-        estimated_max = 23*min_prev_23hour_avg -24*prev_time_window[0][4] 
-    
-        print("Estimated instantaneous reading at " + str(data[entry[1]][2]) + '/' + str(data[entry[1]][1]) + '/' + str(data[entry[1]][0]) + " at " + str(data[entry[1]][3]) + ":00: \nmin = " +str(estimated_min)+", max = "+str(estimated_max)) 
+        estimated_max = 24*prev_time_window[0][4] - min_prev_23hour_avg
+        
+        print("Estimated instantaneous reading at " + str(data[entry[1]][2]) + '/' + str(data[entry[1]][1]) + '/' + str(data[entry[1]][0]) + " at " + str(data[entry[1]][3]) + ":00: \nmin = " +str(estimated_min)+", max = "+str(int(estimated_max//1)))
          
 def interpolate(x, y, x_test):
     '''    
